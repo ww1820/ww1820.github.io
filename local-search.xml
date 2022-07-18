@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>关于 C++ 杂七杂八的笔记</title>
+    <link href="/posts/282bf2c0/"/>
+    <url>/posts/282bf2c0/</url>
+    
+    <content type="html"><![CDATA[<div class="note note-info">            <p>更新中…</p>          </div><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="查看变量类型"><a href="#查看变量类型" class="headerlink" title="查看变量类型"></a>查看变量类型</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;typeinfo&gt;</span></span><br><span class="hljs-comment">//...</span><br>cout &lt;&lt; <span class="hljs-built_in">typeid</span>(var).<span class="hljs-built_in">name</span>() &lt;&lt; endl;<br></code></pre></td></tr></table></figure><h2 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h2><h3 id="typename"><a href="#typename" class="headerlink" title="typename"></a>typename</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">typename</span> std::vector&lt;T&gt;::size_type size_type;<br></code></pre></td></tr></table></figure><p>为 <code>std::vector&lt;T&gt;::size_type</code> 起别名为 <code>size_type</code> 。在模板实例化之前，编译器并不知道<code>vector&lt;T&gt;::size_type</code>是什么，可能的情况有：</p><ul><li>静态数据成员</li><li>静态成员函数</li><li>嵌套类型</li></ul><p><code>typename</code>当用于泛型编程时是另一术语<code>class</code>的同义词。其另一个作用是向编译器指出模板声明（或定义）中的非独立名称（dependent names）是<strong>类型名</strong>，而非变量名。</p><h3 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h3><p>官方定义：</p><blockquote><p><code>typedef</code> does not work like <code>typedef [type] [new name]</code>. <strong>The <code>[new name] </code> part does not always come at the end</strong>.</p><p>You should look at it this way: if <code>[some declaration]</code> declares a variable, <code>typedef [same declaration]</code> would define a type.</p></blockquote><p>任何声明变量的语句前面加上<code>typedef</code> 之后，原来是变量的都变成一种类型，不管这个声明中的标识符号出现在中间还是最后。</p><p>使用<code>typedef</code> 定义的新类型，在使用时可以省略括号。</p><p>例子：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-type">int</span> <span class="hljs-title">P</span><span class="hljs-params">()</span></span>; <span class="hljs-comment">// P 被定义为一个函数类型，它的返回值为int，没有参数</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-type">int</span> <span class="hljs-title">Q</span><span class="hljs-params">()</span></span>; <span class="hljs-comment">// 这里 Q 也被定义为一个函数类型，它的返回值为int，没有参数</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">X</span> &#123;<br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-title">P</span><span class="hljs-params">(Q)</span></span>; <span class="hljs-comment">// 在类 X 中声明了一个静态成员函数，类型为 P, 函数名为 Q。 </span><br>    <span class="hljs-comment">//在类作用域中，Q 不再是函数类型，而是静态成员函数。</span><br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">Q</span><span class="hljs-params">(P)</span></span>; <span class="hljs-comment">// 声明一个静态成员函数 Q，其返回值为int， 参数为 P 类型的函数（重载）</span><br>&#125;;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>C++</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/posts/4a17b156/"/>
     <url>/posts/4a17b156/</url>
