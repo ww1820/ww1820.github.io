@@ -23,22 +23,22 @@
 <meta property="og:site_name" content="AWei&#39;s Blog">
 <meta property="og:description" content="Variadic Template概述可变参数模板。  谈的是模板Templates：  函数模板  类模板   变化的是模板参数：  参数个数：利用参数个数逐一递减的特性，实现递归函数的调用，使用函数模板完成。 参数类型：利用参数个数逐一递减以致参数类型也逐一递减的特性，实现递归继承或递归复合，以类模板完成。    12345678910void print()&amp;#123;&amp;#125; temp">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/p2.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720124019.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720144851.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720145538.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720163404.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720172056.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720172547.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720175418.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720175204.png">
-<meta property="og:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720175730.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022007091.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022008946.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022012705.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022013341.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022015702.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022016392.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022017251.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022019028.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022017584.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022018597.png">
 <meta property="article:published_time" content="2022-07-21T12:01:49.000Z">
-<meta property="article:modified_time" content="2022-07-22T07:01:14.723Z">
+<meta property="article:modified_time" content="2022-08-02T12:19:16.151Z">
 <meta property="article:author" content="AWei">
 <meta property="article:tag" content="C++11">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/p2.png">
+<meta name="twitter:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022007091.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -328,13 +328,17 @@
 </li>
 </ol>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomerHash</span>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">std::<span class="hljs-type">size_t</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-type">const</span> Customer&amp; c)</span> <span class="hljs-type">const</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">hash_val</span>(c.fname, c.lname, c.no);<br>        <span class="hljs-comment">// 2-1-1-...-1-3</span><br>    &#125;<br>&#125;;<br> <br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span>... Types&gt; <span class="hljs-comment">// 1</span><br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">hash_val</span><span class="hljs-params">(<span class="hljs-type">size_t</span>&amp; seed, <span class="hljs-type">const</span> T&amp; val, <span class="hljs-type">const</span> Types&amp;... args)</span></span>&#123;<br>    <span class="hljs-built_in">hash_combine</span>(seed, val);<br>    <span class="hljs-built_in">hash_val</span>(seed, args);<br>&#125;<br> <br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span>... Types&gt; <span class="hljs-comment">// 2</span><br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">size_t</span> <span class="hljs-title">hash_val</span><span class="hljs-params">(<span class="hljs-type">const</span> Types&amp;... args)</span></span>&#123;<br>    <span class="hljs-type">size_t</span> seed = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">hash_val</span>(seed, args...);<br>    <span class="hljs-keyword">return</span> seed;<br>&#125;<br> <br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt; <span class="hljs-comment">// 3</span><br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">hash_val</span><span class="hljs-params">(<span class="hljs-type">size_t</span>&amp; seed, <span class="hljs-type">const</span> T&amp; val)</span></span>&#123;<br>    <span class="hljs-built_in">hash_conbine</span>(seed, val);<br>&#125;<br></code></pre></td></tr></table></figure>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/p2.png" srcset="/img/loading.gif" lazyload alt="递归调用"></p>
+
+
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022007091.png" srcset="/img/loading.gif" lazyload alt="递归调用"></p>
 <ol>
 <li>实现递归继承</li>
 </ol>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span>... Values&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">tuple</span>;<br><span class="hljs-keyword">template</span> &lt;&gt; <span class="hljs-keyword">class</span> <span class="hljs-title class_">tuple</span>&lt;&gt; &#123;&#125;;<br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> Head, <span class="hljs-keyword">typename</span>... Tail&gt;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">tuple</span>&lt;Head, Tail...&gt;<br>    : <span class="hljs-keyword">private</span> tuple&lt;Tail...&gt;                  <span class="hljs-comment">//注意这里的私有继承</span><br>&#123;<br>    <span class="hljs-keyword">typedef</span> tuple&lt;Tail...&gt; inherited;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">tuple</span>() &#123;&#125;<br>    <span class="hljs-built_in">tuple</span>(Head v, Tail... vtail)<br>        :<span class="hljs-built_in">m_head</span>(v), <span class="hljs-built_in">inherited</span>(vtail...) &#123;&#125;<br><br>    <span class="hljs-function">Head <span class="hljs-title">head</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> m_head; &#125;<br>    <span class="hljs-function">inherited&amp; <span class="hljs-title">tail</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>; &#125;       <span class="hljs-comment">//这里涉及派生类到基类的类型转换</span><br><br><span class="hljs-keyword">protected</span>:<br>    Head m_head;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720124019.png" srcset="/img/loading.gif" lazyload alt="递归继承"></p>
+
+
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022008946.png" srcset="/img/loading.gif" lazyload alt="递归继承"></p>
 <h2 id="模板表达式中的空格"><a href="#模板表达式中的空格" class="headerlink" title="模板表达式中的空格"></a>模板表达式中的空格</h2><p>C++11可以去掉模块表达式前面的空格。</p>
 <h2 id="nullptr"><a href="#nullptr" class="headerlink" title="nullptr"></a>nullptr</h2><p>标准库允许使用nullptr取代0或者NULL来对指针赋值。</p>
 <ul>
@@ -409,10 +413,10 @@
 <p><strong>2、何时需要自定义big-three(构造函数、拷贝构造、拷贝赋值)&#x2F;big-five(新增移动构造函数、移动赋值函数)？</strong></p>
 <p>如果类中带有<code>pointer member</code>（指针成员），那我们就可以断定必须要给出 big-three ；<br>如果不带，绝大多与情况下就不必给出 big-three 。</p>
 <p>3、<code>default</code>、<code>delete</code>关键字使用示例</p>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720144851.png" srcset="/img/loading.gif" lazyload alt="20220720144851"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022012705.png" srcset="/img/loading.gif" lazyload alt="=default, =delete"></p>
 <p>在c++中，如果你自定义了big-five函数，编译器就不会再为你生成默认的相关函数，但是如果我们在后边加上<code>= default</code>关键字，就可以重新获得并使用编译器为我们生成的默认函数（显式缺省:告知编译器即使自己定义了也要生成函数默认的缺省版本）；</p>
 <p><code>=delete</code>关键字相对于上面来说则是相反的，<code>=delete</code>表示不要这个函数，就是说这个函数已经删除了不能用了，一旦别人使用就会报错（显式删除：告知编译器不生成函数默认的缺省版本)，引进这两种新特性的目的是为了增强对“类默认函数的控制”，从而让程序员更加精准地去控制默认版本的函数。</p>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720145538.png" srcset="/img/loading.gif" lazyload alt="20220720145538"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022013341.png" srcset="/img/loading.gif" lazyload alt="image-20220802201319128"></p>
 <h2 id="Alias-Template"><a href="#Alias-Template" class="headerlink" title="Alias Template"></a>Alias Template</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">using</span> Vec = std::vector&lt;T, MyAlloc&lt;T&gt;&gt;<br><br><span class="hljs-comment">//使用</span><br>Vec&lt;<span class="hljs-type">int</span>&gt; coll;<br></code></pre></td></tr></table></figure>
 <p>Alias Template 无法特化。</p>
 <p>应用实例(引出模板模板参数)</p>
@@ -449,7 +453,7 @@
           </div>
 
 <h2 id="override"><a href="#override" class="headerlink" title="override"></a>override</h2><p><code>override</code>用于明确要重写父类的虚函数上，相当于告诉编译器这个函数就是要重写父类虚函数这样一个意图，让编译器帮忙检查，而没有这个关键字，编译器是不会帮你检查的。</p>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720163404.png" srcset="/img/loading.gif" lazyload alt="20220720163404"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022015702.png" srcset="/img/loading.gif" lazyload alt="override"></p>
 <h2 id="final"><a href="#final" class="headerlink" title="final"></a>final</h2><p><code>final</code>新增两种功能：</p>
 <ol>
 <li>禁止基类被继承</li>
@@ -470,17 +474,17 @@
 <ol start="2">
 <li>模板之间的应用</li>
 </ol>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720172056.png" srcset="/img/loading.gif" lazyload alt="20220720172056"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022016392.png" srcset="/img/loading.gif" lazyload alt="模板之间的应用"></p>
 <ol start="3">
 <li><p>用来求 lambda 表达式的类型</p>
 <p>lambda 是匿名的函数对象或仿函数，每一个都是独一无二的；如果需要声明一个这种对象的话，需要用模板或者 auto ；如果需要他的 type ，可以使用 decltype ；lambda 没有默认构造函数和析构函数。</p>
 </li>
 </ol>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720172547.png" srcset="/img/loading.gif" lazyload alt="20220720172547"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022017251.png" srcset="/img/loading.gif" lazyload alt="lambda表达式"></p>
 <h2 id="Lambdas"><a href="#Lambdas" class="headerlink" title="Lambdas"></a>Lambdas</h2><h3 id="lambda-语法以及调用方式"><a href="#lambda-语法以及调用方式" class="headerlink" title="lambda 语法以及调用方式"></a>lambda 语法以及调用方式</h3><p>定义： lambda 是一组功能的组合定义， lambda 可以定义为内联函数，可以被当做一个参数或者一个对象，类似于仿函数。</p>
 <p>最简单的形式：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C++">[] &#123;<br>    statements<br>&#125;;<br><br><span class="hljs-keyword">auto</span> l = [] &#123;<br>    statements<br>&#125;;<br><br><span class="hljs-built_in">l</span>(); <br></code></pre></td></tr></table></figure>
-<p>完整形式：<br><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720175418.png" srcset="/img/loading.gif" lazyload alt="20220720175418"></p>
+<p>完整形式：<br><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022019028.png" srcset="/img/loading.gif" lazyload alt="lambda表达式"></p>
 <table>
 <thead>
 <tr>
@@ -513,8 +517,8 @@
 <td>类似函数体</td>
 </tr>
 </tbody></table>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720175204.png" srcset="/img/loading.gif" lazyload alt="20220720175204"></p>
-<p><img src="https://aweiii.coding.net/p/blog/d/img/git/raw/main/posts/20220720175730.png" srcset="/img/loading.gif" lazyload alt="20220720175730"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022017584.png" srcset="/img/loading.gif" lazyload alt="image-20220802201742502"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208022018597.png" srcset="/img/loading.gif" lazyload alt="image-20220802201822504"></p>
 
                 
               </div>
@@ -579,7 +583,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2022年7月22日</div>
+          <div>2022年8月2日</div>
         </div>
       
       <div class="license-meta-item">
