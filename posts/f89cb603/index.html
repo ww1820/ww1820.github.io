@@ -1,0 +1,873 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/blog.png">
+  <link rel="icon" href="/img/blog.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="AWei">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="红黑树的引入二叉搜索树（BST）二叉搜索树（BST）具备以下特性（规则）：  左子树上所有结点的值均小于或等于它的根结点的值。 右子树上所有结点的值均大于或等于它的根结点的值。 左、右子树也分别为二叉搜索树。  在BST中最大比较次数为树的高度，树的高度范围为 $[log(n), n]$。  当树中每个结点左、右子树高度大致相同时，树高为 $\text{log}(n)$ ，则平均查找长度与 $\t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="红黑树">
+<meta property="og:url" content="https://ww1820.github.io/posts/f89cb603/index.html">
+<meta property="og:site_name" content="AWei&#39;s Blog">
+<meta property="og:description" content="红黑树的引入二叉搜索树（BST）二叉搜索树（BST）具备以下特性（规则）：  左子树上所有结点的值均小于或等于它的根结点的值。 右子树上所有结点的值均大于或等于它的根结点的值。 左、右子树也分别为二叉搜索树。  在BST中最大比较次数为树的高度，树的高度范围为 $[log(n), n]$。  当树中每个结点左、右子树高度大致相同时，树高为 $\text{log}(n)$ ，则平均查找长度与 $\t">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031408586.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031412866.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031413467.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031643643.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031545671.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031651195.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031712340.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031712317.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031713313.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031756841.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031616562.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032144818.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032202879.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032207490.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032213353.png">
+<meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032318044.png">
+<meta property="article:published_time" content="2022-08-03T16:10:51.000Z">
+<meta property="article:modified_time" content="2022-08-03T16:14:51.881Z">
+<meta property="article:author" content="AWei">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="树">
+<meta property="article:tag" content="红黑树">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031408586.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>红黑树 | AWei&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ww1820.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AWei&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="红黑树"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-04 00:10" pubdate>
+          2022年8月4日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">红黑树</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="红黑树的引入"><a href="#红黑树的引入" class="headerlink" title="红黑树的引入"></a>红黑树的引入</h1><h2 id="二叉搜索树（BST）"><a href="#二叉搜索树（BST）" class="headerlink" title="二叉搜索树（BST）"></a>二叉搜索树（BST）</h2><p>二叉搜索树（BST）具备以下特性（规则）：</p>
+<ol>
+<li>左子树上所有结点的值均小于或等于它的根结点的值。</li>
+<li>右子树上所有结点的值均大于或等于它的根结点的值。</li>
+<li>左、右子树也分别为二叉搜索树。</li>
+</ol>
+<p>在BST中最大比较次数为树的高度，树的高度范围为 $[log(n), n]$。 </p>
+<p>当树中每个结点左、右子树高度大致相同时，树高为 $\text{log}(n)$ ，则平均查找长度与 $\text{log}(n)$ 成正比，查找的平均时间复杂度在 $O(\text{log}n)$ 数量级上。</p>
+<p>当树形结构为一个单子树时，此时树高 $n$ ，则平均查找长度为 $(n+1)&#x2F;2$ ，查找的平均时间复杂度在 $O(n)$ 数量级上。</p>
+<p>相同序列构成的不同二叉搜索树：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/unique-binary-search-trees/solution/bu-tong-de-er-cha-sou-suo-shu-by-leetcode-solution/">不同的二叉搜索树 - 力扣（LeetCode）</a></p>
+<h2 id="平衡二叉搜索树（AVL）"><a href="#平衡二叉搜索树（AVL）" class="headerlink" title="平衡二叉搜索树（AVL）"></a>平衡二叉搜索树（AVL）</h2><p>平衡二叉查找树的出现，主要是为了解决<strong>当二叉树查找树形态结构变成一个链条结构的时候，查找效率变低的问题</strong>，算法由<code>Adel&#39;son-Vel&#39;skii</code>和<code>Landis</code>发明，同时也称<code>AVL</code>树，特性（规则）如下：</p>
+<ol>
+<li><p>它的左子树和右子树都是平衡二叉树；</p>
+</li>
+<li><p>且它的左子树和右子树的深度之差的绝对值（平衡因子 ） 不超过1。</p>
+</li>
+</ol>
+<p>AVL是严格平衡的BST（平衡因子不超过1）。查找过程与BST一样，只是AVL不会出现最差情况的BST(单支树)。因此查找效率最好，最坏情况都是 $O(\text{log}n)$ 。</p>
+<p>$$<br>balance\  factor &#x3D; height\ of\ left\ subtree - height\ of\ right\ subtree \<br>bf &#x3D; {-1, 0, 1} \<br>|bf| &#x3D; |hl - hr| \le 1<br>$$</p>
+<p>AVL 的旋转：</p>
+<ol>
+<li>LL-imbalance：由于在左子树的左子树插入或删除而导致的不平衡，进行LL-Rotation；</li>
+<li>LR-imbalance：由于在左子树的右子树插入或删除而导致的不平衡，进行LR-Rotation；</li>
+<li>RR-imbalance：由于在右子树的右子树插入或删除而导致的不平衡，进行RR-Rotation；</li>
+<li>RL-imbalance：由于在右子树的左子树插入或删除而导致的不平衡，进行RL-Rotation。</li>
+</ol>
+<p>在插入、删除树节点的时候，<strong>AVL树会自动进行调整</strong>。也就是说，AVL树，本质上是<strong>带了平衡功能的二叉查找树</strong>（二叉排序树，二叉搜索树）。AVL在每次插入节点时对树进行检查和调整，AVL的旋转每次只涉及以imbalance节点为根节点的3个节点（如下图）：</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031408586.png" srcset="/img/loading.gif" lazyload alt="AVL树的旋转-插入42"></p>
+<p>以 LL-Rotation 和 LR-Rotation 为例（假设图中节点A为第一个 $|bf| \neq 1$ 的节点）：</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031412866.png" srcset="/img/loading.gif" lazyload alt="LL-Rotation"></p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031413467.png" srcset="/img/loading.gif" lazyload alt="LR-Rotation"></p>
+<p>给定节点数为 $n$ 的AVL树，最大高度为 $\text{log}(2n)$ ，而不是 $n$。</p>
+<p>平衡二叉搜索树解决二叉搜索树的问题，保证了不会成为线性的链表。<br>左结点小于根节点，右结点大于根节点，并且还规定了左子树和右子树的高度差不得超过1。</p>
+<p>但其仍然存在问题：</p>
+<ol>
+<li>由于要维持自身的平衡，所以进行插入和删除结点操作的时候，需要对结点进行频繁的旋转。</li>
+<li>每一个节点只能存放一个元素，每个节点只有两个子节点，所以查找时，需要多次磁盘IO（如果数据存放在磁盘中的，每次查询是将磁盘中的一页数据加入内存，树的每一层节点存放在一页中，不同层数据存放在不同页。）</li>
+</ol>
+<h2 id="B-树"><a href="#B-树" class="headerlink" title="B 树"></a>B 树</h2><p>视频：<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=aZjYr87r1b8">10.2 B Trees and B+ Trees. How they are useful in Databases - YouTube</a></p>
+<p>B 树的基本思想：多级索引</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031643643.png" srcset="/img/loading.gif" lazyload alt="多级索引"></p>
+<p>一个m阶的B树的规则：</p>
+<ol>
+<li>根结点至少有两个子树（1个索引）；</li>
+<li>每个中间节点都包含 $k-1$ 个元素和 $k$ 个孩子，其中 $m&#x2F;2 \le k \le m$  ；</li>
+<li>每一个叶子节点都包含 $k-1$ 个元素，其中 $m&#x2F;2 \le k \le m$  ；</li>
+<li>所有的叶子结点都位于同一层；</li>
+<li>每个节点中的元素从小到大排列，节点当中 $k-1$ 个元素正好是 $k$ 个孩子包含的元素的值域分划。</li>
+</ol>
+<p>4阶B树，例子：</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031545671.png" srcset="/img/loading.gif" lazyload alt="B树的构建"></p>
+<h2 id="2-3-4-树"><a href="#2-3-4-树" class="headerlink" title="2-3-4 树"></a>2-3-4 树</h2><p>2-3-4 树 是 四阶 B树，它是一种多路查找树，其结构有以下限制：</p>
+<ol>
+<li>所有叶子节点具有相同的深度；</li>
+<li>节点只能是2-节点、3-节点和4-节点之一：<ul>
+<li>2-节点：包含1个元素的节点，有2个子树；</li>
+<li>3-节点：包含2个元素的节点，有3个子树；</li>
+<li>4-节点：包含3个元素的节点，有4个子树。</li>
+</ul>
+</li>
+<li>所有节点必须至少包含一个元素；</li>
+<li>元素始终保持排序顺序 ，整体上保持二叉搜索树的性质，即父节点的值大于左子树所有节点，小于右子树所有节点；</li>
+<li>节点有多个元素时，每个元素必须大于它左边的和左子树中的元素。</li>
+</ol>
+<p>例：</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031651195.png" srcset="/img/loading.gif" lazyload alt="2-3-4树"></p>
+<p>2-3-4树的实现在一些编程语言中较为困难，一般使用其等同的红黑树。</p>
+<h1 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h1><p>视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1j44y1q7k8?p=1&vd_source=88ba307806f3a95297a7d08a098d6a4b">【完整版】最全最新红黑树讲解，数组、链表、二叉树、AVL树、红黑树哔哩哔哩_bilibili</a></p>
+<h2 id="2-3-4-树和红黑树的等价关系"><a href="#2-3-4-树和红黑树的等价关系" class="headerlink" title="2-3-4 树和红黑树的等价关系"></a>2-3-4 树和红黑树的等价关系</h2><p>2-3-4 树和红黑树的等价关系：</p>
+<ol>
+<li>2-节点对应RB-Tree黑节点；</li>
+</ol>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031712340.png" srcset="/img/loading.gif" lazyload alt="2-节点"></p>
+<ol start="2">
+<li>3-节点对应RB-Tree上黑下红（分为左倾和右倾两种）；</li>
+</ol>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031712317.png" srcset="/img/loading.gif" lazyload alt="3-节点"></p>
+<ol start="3">
+<li>4-节点对应RB-Tree上黑下红。</li>
+</ol>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031713313.png" srcset="/img/loading.gif" lazyload alt="4-节点"></p>
+<p>2-3-4 树到红黑树的转换：</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031756841.png" srcset="/img/loading.gif" lazyload alt="2-3-4 树到红黑树（左倾）"></p>
+<p>平衡二叉查找树通过严格平衡策略，以牺牲建立查找结构的代价换来了稳定的查找时间复杂度。但是相对来说，在删除方面，时间复杂度稍大。而红黑树不严格控制左、右子树高度或节点数之差小于等于1。</p>
+<h2 id="红黑树的特点"><a href="#红黑树的特点" class="headerlink" title="红黑树的特点"></a>红黑树的特点</h2><p>红黑树是自平衡（不严格限制）的二叉搜索树， <strong>红黑树的5条规则：</strong></p>
+<ol>
+<li>节点要么是黑色要么是红色；</li>
+<li>根节点是黑色；</li>
+<li>每个叶子节点都是黑色的空节点（NIL节点）；</li>
+<li>每个红色节点的两个子节点都是黑色（也就是说从每个叶子到根的所有路径上不能有两个连续的红色节点）；</li>
+<li>从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点（确保没有一条路径会比其他路径长出2倍，因而，红黑树是相对的接近平衡的二叉树，但是相比平衡二叉树而言，尤其是删除的时间复杂度，有所降低）。</li>
+</ol>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208031616562.png" srcset="/img/loading.gif" lazyload alt="红黑树"></p>
+<p><strong>分析：</strong></p>
+<ol>
+<li>第2条特性：从 2-3-4 树到红黑树的转换中，根节点要么是2-节点（黑色），要么是3-节点或4-节点分裂出的（上黑）；</li>
+<li>第5条特性：从 2-3-4 树到红黑树的转换中，可以看出2-3-4 树的每个节点中有且仅有一个黑色元素，由于B树中所有的叶子结点都位于同一层，所以从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点（2-3-4树的高度+1）。</li>
+</ol>
+<p>红黑树在查找方面和AVL树操作几乎相同。牺牲了严格的高度平衡的优越条件为代价，它只要求部分地达到平衡要求，结合变色，降低了对旋转的要求，从而提高了性能。任何不平衡都会在三次旋转之内解决。<br>确保树的最长路径不大于两倍的最短路径的长度，所以可以看出它的查找效果是有最低保证的。在最坏的情况下也可以保证 $O(\text{log}n)$ 。</p>
+<p>红黑树的通过旋转和染色来自平衡。</p>
+<h2 id="红黑树的查找"><a href="#红黑树的查找" class="headerlink" title="红黑树的查找"></a>红黑树的查找</h2><p>红黑树的查找与二叉树搜索树的查找一样。</p>
+<h2 id="红黑树的插入"><a href="#红黑树的插入" class="headerlink" title="红黑树的插入"></a>红黑树的插入</h2><p>参考资料：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/166319823">红黑树的原理 (插入+ 删除) 案例分析 - 知乎 (zhihu.com)</a></p>
+<p>向红黑树中插入新的结点。具体做法是：</p>
+<ol>
+<li>将新结点的 color 赋为红色，然后以二叉排序树的插入方法插入到红黑树中去。之所以将新插入的结点的颜色赋为红色，是因为：如果设为黑色，就会导致根到叶子的路径上有一条路上，多一个额外的黑结点，这个是很难调整的。</li>
+<li>通过颜色调换和树旋转来调整可能会出现两个连续红色节点的冲突。</li>
+</ol>
+<p>插入不同的情况：</p>
+<ol>
+<li>插入根节点；</li>
+<li>插入节点的父节点为黑色；</li>
+<li>插入节点的父节点为红色，叔节点也为红色；</li>
+<li>插入节点的父节点是红色，叔节点是黑色：<ol>
+<li>左左插入</li>
+<li>左右插入</li>
+<li>右右插入</li>
+<li>右左插入</li>
+</ol>
+</li>
+</ol>
+<p>具体操作：</p>
+<ol>
+<li><p>插入根结点：直接染黑。</p>
+</li>
+<li><p>插入节点的父节点为黑色，没有出现两个连续红色节点的冲突，不需要调整。</p>
+</li>
+<li><p>插入节点的父节点为红色，叔节点也为红色，不需要旋转，直接染色，注意递归向上调整。</p>
+<p>分析：插入N之前，N所在的位置必为NIL，由于插入之前也是一棵 RB-Tree，则 <strong>B 节点必为 NIL</strong>。插入新节点之后树仍是平衡的，所以不需要旋转。</p>
+</li>
+</ol>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032144818.png" srcset="/img/loading.gif" lazyload alt="case 3"></p>
+<ol start="4">
+<li><p>插入节点的父节点是红色，叔节点是黑色:</p>
+<ol>
+<li><p>左左插入，左旋</p>
+<p>分析：插入N之前，N所在的位置为NIL，由于插入之前也是一棵 RB-Tree，则 <strong>B 节点与 U 节点必为 NIL</strong>。插入新节点之后树为LL-imbalance，需要进行LL-Rotation。</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032202879.png" srcset="/img/loading.gif" lazyload alt="case 4-1"></p>
+</li>
+<li><p>左右插入</p>
+<p>分析：插入N之前，N所在的位置为NIL，由于插入之前也是一棵 RB-Tree，则 <strong>B 节点与 U 节点必为 NIL</strong>。插入新节点之后树为LR-imbalance，需要进行LR-Rotation。</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032207490.png" srcset="/img/loading.gif" lazyload alt="case4-2"></p>
+</li>
+<li><p>右右插入</p>
+<p>分析：插入N之前，N所在的位置为NIL，由于插入之前也是一棵 RB-Tree，则 <strong>B 节点与 U 节点必为 NIL</strong>。插入新节点之后树为RR-imbalance，需要进行RR-Rotation。</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032213353.png" srcset="/img/loading.gif" lazyload alt="case4-3"></p>
+</li>
+<li><p>右左插入</p>
+<p>分析：插入N之前，N所在的位置为NIL，由于插入之前也是一棵 RB-Tree，则 <strong>B 节点与 U 节点必为 NIL</strong>。插入新节点之后树为RL-imbalance，需要进行RL-Rotation。</p>
+<p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032318044.png" srcset="/img/loading.gif" lazyload alt="case4-4"></p>
+</li>
+</ol>
+</li>
+</ol>
+<p>总结：根据平衡二叉树正常插入节点之后根据平衡判断是否需要旋转，若不需要旋转，则将 <code>Parent</code> 和 <code>Uncle</code> 染黑，<code>GrandParent</code> 染红，再递归向上调整；若不平衡，则根据情况进行旋转，旋转之后上黑（新的 <code>GrandParent</code> ）下红染色。</p>
+<h2 id="红黑树的删除"><a href="#红黑树的删除" class="headerlink" title="红黑树的删除"></a>红黑树的删除</h2><p>删除不同的情况：</p>
+<ol>
+<li>删除叶节点，且叶节点为红色，无需调整；</li>
+<li>删除叶节点，叶节点为黑色，需要调整；</li>
+<li>删除节点非叶节点，则将要删除的节点与其前驱或者后继节点进行交换，此时情况变为1或2（根据前驱或者后继节点的颜色决定）。</li>
+</ol>
+<p>情况2若删除后不平衡则需要根据AVL旋转规则旋转后染色，否则直接染色。</p>
+<p>如果不旋转，则将兄弟节点设置为红色，将父节点设置为当前节点递归，直到根节点，或遇到红色节点；如果旋转，则旋转之后 <code>Parent</code> 位置的颜色不变，其他位置根据黑色节点个数进行调整。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="category-chain-item">算法与数据结构</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">#数据结构</a>
+      
+        <a href="/tags/%E6%A0%91/">#树</a>
+      
+        <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">#红黑树</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>红黑树</div>
+      <div>https://ww1820.github.io/posts/f89cb603/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>AWei</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2022年8月4日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/735e5788/" title="排序算法">
+                        <span class="hidden-mobile">排序算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.1/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
