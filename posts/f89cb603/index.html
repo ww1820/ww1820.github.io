@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032213353.png">
 <meta property="og:image" content="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202208032318044.png">
 <meta property="article:published_time" content="2022-08-03T16:10:51.000Z">
-<meta property="article:modified_time" content="2022-08-03T16:14:51.881Z">
+<meta property="article:modified_time" content="2022-08-04T06:03:20.843Z">
 <meta property="article:author" content="AWei">
 <meta property="article:tag" content="数据结构">
 <meta property="article:tag" content="树">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.9k 字
+          4k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          33 分钟
+          34 分钟
         
       </span>
     
@@ -320,7 +320,7 @@
 </li>
 </ol>
 <p>AVL是严格平衡的BST（平衡因子不超过1）。查找过程与BST一样，只是AVL不会出现最差情况的BST(单支树)。因此查找效率最好，最坏情况都是 $O(\text{log}n)$ 。</p>
-<p>$$<br>balance\  factor &#x3D; height\ of\ left\ subtree - height\ of\ right\ subtree \<br>bf &#x3D; {-1, 0, 1} \<br>|bf| &#x3D; |hl - hr| \le 1<br>$$</p>
+<p>$$<br>balance\  factor &#x3D; height\ of\ left\ subtree - height\ of\ right\ subtree \<br>bf &#x3D; {-1, 0, 1} \<br>|bf| &#x3D; |hl - hr| \le 1 \<br>$$</p>
 <p>AVL 的旋转：</p>
 <ol>
 <li>LL-imbalance：由于在左子树的左子树插入或删除而导致的不平衡，进行LL-Rotation；</li>
@@ -456,11 +456,12 @@
 </li>
 </ol>
 <p>总结：根据平衡二叉树正常插入节点之后根据平衡判断是否需要旋转，若不需要旋转，则将 <code>Parent</code> 和 <code>Uncle</code> 染黑，<code>GrandParent</code> 染红，再递归向上调整；若不平衡，则根据情况进行旋转，旋转之后上黑（新的 <code>GrandParent</code> ）下红染色。</p>
-<h2 id="红黑树的删除"><a href="#红黑树的删除" class="headerlink" title="红黑树的删除"></a>红黑树的删除</h2><p>删除不同的情况：</p>
+<h2 id="红黑树的删除"><a href="#红黑树的删除" class="headerlink" title="红黑树的删除"></a>红黑树的删除</h2><p>参考：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1KA41187v6?vd_source=88ba307806f3a95297a7d08a098d6a4b">红黑树删除_bilibili</a></p>
+<p>删除不同的情况：</p>
 <ol>
 <li>删除叶节点，且叶节点为红色，无需调整；</li>
 <li>删除叶节点，叶节点为黑色，需要调整；</li>
-<li>删除节点非叶节点，则将要删除的节点与其前驱或者后继节点进行交换，此时情况变为1或2（根据前驱或者后继节点的颜色决定）。</li>
+<li>删除节点非叶节点，若该节点只有一个子节点，则用该子节点替代删除节点；若该节点有两个子节点，则将要删除的节点与其前驱或者后继节点进行替代。此时情况变为1或2（根据实际被删除的节点的颜色决定）。</li>
 </ol>
 <p>情况2若删除后不平衡则需要根据AVL旋转规则旋转后染色，否则直接染色。</p>
 <p>如果不旋转，则将兄弟节点设置为红色，将父节点设置为当前节点递归，直到根节点，或遇到红色节点；如果旋转，则旋转之后 <code>Parent</code> 位置的颜色不变，其他位置根据黑色节点个数进行调整。</p>
@@ -560,6 +561,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/posts/334154d9/" title="Ubuntu 升级 gcc-11">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Ubuntu 升级 gcc-11</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
