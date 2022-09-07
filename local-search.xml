@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>WebSever 环境配置</title>
+    <link href="/posts/cbaa05f8/"/>
+    <url>/posts/cbaa05f8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Linux服务器-WebSever-环境配置问题记录"><a href="#Linux服务器-WebSever-环境配置问题记录" class="headerlink" title="Linux服务器 WebSever 环境配置问题记录"></a>Linux服务器 WebSever 环境配置问题记录</h1><h2 id="vscode-连接远程服务器"><a href="#vscode-连接远程服务器" class="headerlink" title="vscode 连接远程服务器"></a>vscode 连接远程服务器</h2><p>下载 Remote-SSH 插件配置连接。</p><h3 id="免密登录"><a href="#免密登录" class="headerlink" title="免密登录"></a>免密登录</h3><p>本地电脑cmd输入命令：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh-keygen<br></code></pre></td></tr></table></figure><p>将生成的公钥复制到云服务器的<code>~/.ssh/authorized_keys</code> 里</p><h2 id="安装-mysql"><a href="#安装-mysql" class="headerlink" title="安装 mysql"></a>安装 mysql</h2><p>sudo apt-get install mysql-server<br>apt-get isntall mysql-client<br>sudo apt-get install libmysqlclient-dev</p><p>sudo mysql -u root -p</p><p>修改密码</p><p>ALTER USER ‘root‘@’localhost’ IDENTIFIED WITH mysql_native_password BY ‘123456’</p><p>flush privileges;</p><h2 id="解决-github-Permission-denied-publickey"><a href="#解决-github-Permission-denied-publickey" class="headerlink" title="解决 github Permission denied (publickey)"></a>解决 github Permission denied (publickey)</h2><ol><li>如果没有ssh key 的话，输入命令：ssh-keygen -t <a href="https://so.csdn.net/so/search?q=rsa&spm=1001.2101.3001.7020">rsa</a> -C “<a href="mailto:&#x78;&#120;&#64;&#x65;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x78;&#120;&#64;&#x65;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>“</li><li>打开刚刚生成的id_rsa.pub，将里面的内容复制，进入github在settings下，SSH and GPG keys下new SSH key，title随便取一个名字，然后将id_rsa.pub里的内容复制到Key中，完成后Add SSH Key。</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+      <category>项目</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>C++</tag>
+      
+      <tag>Linux</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux 多进程开发（2）</title>
     <link href="/posts/d87f7e0c/"/>
     <url>/posts/d87f7e0c/</url>
@@ -22,9 +51,9 @@
     
     <tags>
       
-      <tag>Linux</tag>
-      
       <tag>C++</tag>
+      
+      <tag>Linux</tag>
       
     </tags>
     
@@ -51,9 +80,9 @@
     
     <tags>
       
-      <tag>Linux</tag>
-      
       <tag>C++</tag>
+      
+      <tag>Linux</tag>
       
     </tags>
     
@@ -80,9 +109,9 @@
     
     <tags>
       
-      <tag>Linux</tag>
-      
       <tag>C++</tag>
+      
+      <tag>Linux</tag>
       
     </tags>
     
