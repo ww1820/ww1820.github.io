@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>git简介</title>
+    <link href="/posts/e0929299/"/>
+    <url>/posts/e0929299/</url>
+    
+    <content type="html"><![CDATA[<p>参考资料：<a href="https://www.runoob.com/manual/git-guide/">git简明指南</a></p><h1 id="01-安装"><a href="#01-安装" class="headerlink" title="01 安装"></a>01 安装</h1><h1 id="02-仓库"><a href="#02-仓库" class="headerlink" title="02 仓库"></a>02 仓库</h1><p>在文件夹下运行<code>git int</code> 命令，创建新仓库；</p><p>创建仓库的克隆版本：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 本地仓库</span><br>git <span class="hljs-built_in">clone</span> /path/to/repository<br><span class="hljs-comment"># 远端仓库</span><br>git <span class="hljs-built_in">clone</span> username@host:/path/to/repository<br></code></pre></td></tr></table></figure><h1 id="03-工作流"><a href="#03-工作流" class="headerlink" title="03 工作流"></a>03 工作流</h1><p><strong>本地仓库</strong>由git维护的三棵“树”组成：</p><ol><li>工作目录（工作区）</li><li>暂存区（Index&#x2F;stage）：缓存区域，保存临时改动</li><li>HEAD：指向最后一次提交的结果<br><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202305111854684.png" alt="本地仓库"></li></ol><p>使用<code>git status</code>命令查看文件状态（已修改未暂存，已暂存未提交）。</p><p>commit之后暂存区的内容会被清空。</p><h1 id="04-添加和提交"><a href="#04-添加和提交" class="headerlink" title="04 添加和提交"></a>04 添加和提交</h1><p>使用<code>git add</code>命令将工作区的改动添加到暂存区；</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git add &lt;filename&gt;   <span class="hljs-comment"># 指定文件</span><br>git add *            <span class="hljs-comment"># 所有文件</span><br></code></pre></td></tr></table></figure><p>使用<code>git commit</code>命令将暂存区的改动提交到HEAD并清空暂存区；</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git commit -m <span class="hljs-string">&quot;message&quot;</span><br></code></pre></td></tr></table></figure><h1 id="05-推送改动"><a href="#05-推送改动" class="headerlink" title="05 推送改动"></a>05 推送改动</h1><p>执行<code>git push</code>命令将<strong>本地仓库</strong>提交的改动（HEAD）推送到<strong>远端</strong>仓库的某一分支；</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git push origin &lt;branch&gt;<br></code></pre></td></tr></table></figure><p>如果本地仓库没有关联远端仓库，使用如下命令添加远端仓库</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git remote add origin &lt;server&gt;<br></code></pre></td></tr></table></figure><h1 id="06-分支"><a href="#06-分支" class="headerlink" title="06 分支"></a>06 分支</h1><p>分支是用来将特性开发绝缘开来的。创建仓库时，master 是“默认的”分支。<strong>在其他分支上进行开发，完成后再将它们合并到主分支上。</strong></p><p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202305111902884.png" alt="分支"></p><p>常用命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">git checkout -b &lt;branch&gt; <span class="hljs-comment"># 创建并切换分支</span><br>git checkout &lt;branch&gt;    <span class="hljs-comment"># 切换分支</span><br>git branch -d &lt;branch&gt;   <span class="hljs-comment"># 删除分支</span><br>git push origin &lt;branch&gt; <span class="hljs-comment"># 推送分支</span><br></code></pre></td></tr></table></figure><p>在分支推送到远端仓库前，<em>该分支不为他人所见</em>。</p><h1 id="07-更新与合并"><a href="#07-更新与合并" class="headerlink" title="07 更新与合并"></a>07 更新与合并</h1><p>使用<code>git pull</code> 将远端仓库的改动更新到本地仓库。</p><p>更新远程追踪的分支并将<code>&lt;branch&gt;</code>合并到当前分支：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git fetch<br>git merge &lt;branch&gt;<br></code></pre></td></tr></table></figure><p>在这两种情况下，git会尝试自动合并改动，发生冲突时（conflicts）需要手动合并，合并成功之后使用<code>git add</code>将文件添加到暂存区标记为合并成功。</p><p>在合并改动之前使用<code>git diff</code>命令预览差异，<code>git diff</code> 只能比较还在工作区的新旧文件，即add后就看不到了。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git diff &lt;source_branch&gt; &lt;target_branch&gt;<br></code></pre></td></tr></table></figure><h1 id="08-标签"><a href="#08-标签" class="headerlink" title="08 标签"></a>08 标签</h1><p>推荐为软件发布创建标签，执行如下命令创建一个叫做 1.0.0 的标签：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git tag 1.0.0 1b2e1d63ff<br></code></pre></td></tr></table></figure><p>1b2e1d63ff 是要标记的提交 ID 的前 10 位字符。可以使用<code>git log</code>命令获取提交 ID。<br>可以使用少一点的提交 ID 前几位，只要它的指向具有<strong>唯一性</strong>。</p><h1 id="09-替换本地改动"><a href="#09-替换本地改动" class="headerlink" title="09 替换本地改动"></a>09 替换本地改动</h1><p>操作失误时，使用<code>git checkout --&lt;filename&gt;</code>将工作目录中的文件替换为<strong>暂存区</strong>中的最新内容：</p><p>使用<code>git reset HEAD</code>将HEAD中的内容替换到暂存区。</p><p>已提交的版本退回：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git reset --hard &lt;CommitId&gt;<br></code></pre></td></tr></table></figure><p>从远端仓库获取最新版本，不修改本地仓库，后续可以进行merge和rebase：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git fetch orgin<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>工具类</category>
+      
+      <category>git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>【转载】SumatraPDF反向搜索命令行设置</title>
     <link href="/posts/5bc49fa7/"/>
     <url>/posts/5bc49fa7/</url>
@@ -153,9 +180,9 @@
     
     <tags>
       
-      <tag>C++</tag>
-      
       <tag>八股文</tag>
+      
+      <tag>C++</tag>
       
     </tags>
     
