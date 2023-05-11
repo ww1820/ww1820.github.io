@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>git pull、git fetch、git merge 与 git rebase</title>
+    <link href="/posts/27e3c6f0/"/>
+    <url>/posts/27e3c6f0/</url>
+    
+    <content type="html"><![CDATA[<p>参考文档：</p><ol><li><a href="https://git-scm.com/docs/git-fetch">Git - git-fetch Documentation</a></li><li><a href="https://git-scm.com/docs/git-pull">Git - git-pull Documentation</a></li><li><a href="https://git-scm.com/docs/git-rebase">Git - git-rebase Documentation</a></li></ol><hr><p>git pull 与 git fetch 的功能大致相同，起到更新代码的作用。</p><h1 id="git-fetch"><a href="#git-fetch" class="headerlink" title="git fetch"></a>git fetch</h1><p>git fetch 获取远端仓库分支，更新git远程追踪的分支，不进行合并。</p><h1 id="git-pull"><a href="#git-pull" class="headerlink" title="git pull"></a>git pull</h1><p>git pull官方文档描述：</p><blockquote><p>Incorporates changes from a remote repository into the current branch. If the current branch is behind the remote, then by default it will fast-forward the current branch to match the remote. If the current branch and the remote have diverged, the user needs to specify how to reconcile the divergent branches with –rebase or –no-rebase (or the corresponding configuration option in pull.rebase).</p></blockquote><p>合并远端仓库到当前分支，如果当前在远程分支之后，默认采用fast-forward（快进）合并。入伙当前分支和远程分支存在在分歧，用户需要通过参数指定如何合并分支（rebase或者no-rebase）。</p><blockquote><p>More precisely, git pull runs git fetch with the given parameters and then depending on configuration options or command line flags, will call either git rebase or git merge to reconcile diverging branches.</p></blockquote><p>更具体的说，git pull 根据给定的参数运行 git fetch，然后根据参数或者命令行标识调用git rebase 或者 git merge合并分支。</p><p>默认的操作为git merge。</p><p>假设有如下分支：</p><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">     A---B---C <span class="hljs-keyword">master</span> <span class="hljs-title">on</span> origin<br>    /<br>D---E---F---G feature<br>    ^     origin/<span class="hljs-keyword">master</span> <span class="hljs-title">in</span> your repository<br></code></pre></td></tr></table></figure><p>git pull 会获取并重现从分歧处开始的远程分支中的修改，直到当前提交（节点C）在master的顶部并将结果记录在一个新的提交中。git merge后的结果如下：</p><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">git merge:</span> <br>      <span class="hljs-comment">A</span><span class="hljs-literal">---</span><span class="hljs-comment">B</span><span class="hljs-literal">---</span><span class="hljs-comment">C origin/master</span><br>     <span class="hljs-comment">/         \</span>     <br><span class="hljs-comment">D</span><span class="hljs-literal">---</span><span class="hljs-comment">E</span><span class="hljs-literal">---</span><span class="hljs-comment">F</span><span class="hljs-literal">---</span><span class="hljs-comment">G</span><span class="hljs-literal">---</span><span class="hljs-comment">H  feature</span><br></code></pre></td></tr></table></figure><p>git rebase将当前分支的所有未保存在<code>&lt;upstream&gt;</code>中commit点保存到的临时区域，然后把当前分支更新到最新的原分支，并将保存的提交一个个按序添加到当前分支的顶部。</p><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">git rebase:</span><br>      <span class="hljs-comment">A</span><span class="hljs-literal">---</span><span class="hljs-comment">B</span><span class="hljs-literal">---</span><span class="hljs-comment">C&#x27;</span><span class="hljs-literal">--</span><span class="hljs-comment">F&#x27;</span><span class="hljs-literal">--</span><span class="hljs-comment">G&#x27; feature</span><br>     <span class="hljs-comment">/</span>     <br><span class="hljs-comment">D</span><span class="hljs-literal">---</span><span class="hljs-comment">E</span><br>    <span class="hljs-comment">^  origin/master in your repository</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>工具类</category>
+      
+      <category>git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>git简介</title>
     <link href="/posts/e0929299/"/>
     <url>/posts/e0929299/</url>
