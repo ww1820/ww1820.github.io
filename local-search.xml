@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>使用宏打印调试信息</title>
+    <link href="/posts/dd070f33/"/>
+    <url>/posts/dd070f33/</url>
+    
+    <content type="html"><![CDATA[<h1 id="使用宏打印调试信息"><a href="#使用宏打印调试信息" class="headerlink" title="使用宏打印调试信息"></a>使用宏打印调试信息</h1><h2 id="代码模板"><a href="#代码模板" class="headerlink" title="代码模板"></a>代码模板</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">define</span> DBG_PRINTF(fmt, args...)  \</span><br><span class="hljs-meta">do\</span><br><span class="hljs-meta">&#123;\</span><br><span class="hljs-meta">    printf(<span class="hljs-string">&quot;&lt;&lt;File:%s  Line:%d  Function:%s&gt;&gt; &quot;</span>, __FILE__, __LINE__, __FUNCTION__);\</span><br><span class="hljs-meta">    printf(fmt, ##args);\</span><br><span class="hljs-meta">&#125;while(0)</span><br></code></pre></td></tr></table></figure><h2 id="宏定义中的-和"><a href="#宏定义中的-和" class="headerlink" title="宏定义中的#和##"></a>宏定义中的#和##</h2><p><code>#</code>：将宏参数字符串化<br><code>##</code>：连接符</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>C++</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>宏</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>QT 实现运行对话框</title>
+    <link href="/posts/64756d76/"/>
+    <url>/posts/64756d76/</url>
+    
+    <content type="html"><![CDATA[<h1 id="QT-实现运行对话框"><a href="#QT-实现运行对话框" class="headerlink" title="QT 实现运行对话框"></a>QT 实现运行对话框</h1><ol><li>获取文本框内容，运行程序</li><li>清空文本框，关闭对话框</li><li>LineEdit激活时回车运行程序，<code>connect()</code></li></ol><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">QObject::<span class="hljs-built_in">connect</span>(ui-&gt;CmdLineEdit, <span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">returnPressed</span>()),<br>                <span class="hljs-keyword">this</span>, <span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">on_SubmitButton_clicked</span>()));<br></code></pre></td></tr></table></figure><p><img src="https://blog-1312962011.cos.ap-nanjing.myqcloud.com/imgs/202305201814671.png" alt="Running程序界面"></p><p>问题：</p><ol><li>获取Edit文本时需要去除前后空格：<code>trimmed()</code></li><li>Linux <code>QProcess::start()</code> 没反应</li><li>QT 修改绑定了槽的控件Label时，需要删除.h文件里对应的槽函数</li><li><code>QString</code>转换为<code>char *</code></li></ol><p>参考资料：<a href="https://blog.csdn.net/wangpailiulanqi8/article/details/129293799">QT中执行linux指令的几种方法</a></p><h2 id="QProcess-start"><a href="#QProcess-start" class="headerlink" title="QProcess::start()"></a>QProcess::start()</h2><p><code>QProcess::start()</code>的有输出的命令执行结果可以从程序中获取字符流，比如<code>ls</code>命令。<br>但是需要<code>waitForFinished()</code>等待程序执行完成，不然可能无法获取到结果。</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++">myProcess-&gt;<span class="hljs-built_in">start</span>(cmdLine.<span class="hljs-built_in">trimmed</span>());<br>myProcess-&gt;<span class="hljs-built_in">waitForFinished</span>();<br><br>QString result = myProcess-&gt;<span class="hljs-built_in">readAllStandardOutput</span>();    <span class="hljs-comment">//获取执行结果</span><br><span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;cmd:&quot;</span> &lt;&lt; cmdLine.<span class="hljs-built_in">trimmed</span>() &lt;&lt; <span class="hljs-string">&quot;\n&quot;</span>;<br><span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;result:\n&quot;</span> &lt;&lt;result;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">输入：ls</span><br><span class="hljs-comment">输出：</span><br><span class="hljs-comment">cmd: &quot;ls&quot; </span><br><span class="hljs-comment"></span><br><span class="hljs-comment">result:</span><br><span class="hljs-comment"> &quot;main.o\nMakefile\nmoc_widget.cpp\nmoc_widget.o\nMyLayout\nui_widget.h\nwidget.o\n&quot;</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure><p>但是如果将<code>myProcess-&gt;waitForFinished()</code>注释掉，运行结果：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">/*</span><br><span class="hljs-comment">输入：ls</span><br><span class="hljs-comment">输出：</span><br><span class="hljs-comment">cmd: &quot;ls&quot; </span><br><span class="hljs-comment"></span><br><span class="hljs-comment">result:</span><br><span class="hljs-comment"> </span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure><h2 id="QString转换为char"><a href="#QString转换为char" class="headerlink" title="QString转换为char *"></a>QString转换为char *</h2><p><code>qDebug()</code>参数为<code>QString</code>类型时，输出里<code>\n</code>为字符，需要将<code>QString</code>转为<code>char*</code>。<br>具体代码如下：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;result:\n&quot;</span> &lt;&lt;result.<span class="hljs-built_in">toLatin1</span>().<span class="hljs-built_in">data</span>();<br></code></pre></td></tr></table></figure><p>运行结果：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">/*</span><br><span class="hljs-comment">输入：ls</span><br><span class="hljs-comment">输出：</span><br><span class="hljs-comment">cmd: &quot;ls&quot; </span><br><span class="hljs-comment"></span><br><span class="hljs-comment">result:</span><br><span class="hljs-comment"> main.o</span><br><span class="hljs-comment">Makefile</span><br><span class="hljs-comment">moc_widget.cpp</span><br><span class="hljs-comment">moc_widget.o</span><br><span class="hljs-comment">MyLayout</span><br><span class="hljs-comment">ui_widget.h</span><br><span class="hljs-comment">widget.o</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>QT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>QT</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>git pull、git fetch、git merge 与 git rebase</title>
     <link href="/posts/27e3c6f0/"/>
     <url>/posts/27e3c6f0/</url>
@@ -207,9 +257,9 @@
     
     <tags>
       
-      <tag>八股文</tag>
-      
       <tag>C++</tag>
+      
+      <tag>八股文</tag>
       
     </tags>
     
