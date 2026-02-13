@@ -1,0 +1,8 @@
+import{_ as a,o as s,c as p,ag as e}from"./chunks/framework.DEqXEGcv.js";const _=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"5 工具/Ubuntu 创建应用快捷方式.md","filePath":"5 工具/Ubuntu 创建应用快捷方式.md","lastUpdated":1770949611000}'),l={name:"5 工具/Ubuntu 创建应用快捷方式.md"};function i(t,n,c,o,r,d){return s(),p("div",null,[...n[0]||(n[0]=[e(`<ol><li>在<code>/usr/share/applications/</code>目录创建<code>application.desktop</code>文件</li> <li>编辑</li></ol> <div class="language- vp-adaptive-theme line-numbers-mode"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>[Desktop Entry]</span></span>
+<span class="line"><span>Name=IntelliJ IDEA</span></span>
+<span class="line"><span>Exec=/develop/application/bin/application.sh</span></span>
+<span class="line"><span>Comment=IntelliJ IDEA</span></span>
+<span class="line"><span>Icon=/develop/application/bin/application.png</span></span>
+<span class="line"><span>Type=Application</span></span>
+<span class="line"><span>Terminal=false</span></span>
+<span class="line"><span>Encoding=UTF-8</span></span></code></pre> <div class="line-numbers-wrapper" aria-hidden="true"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><ol start="3"><li>添加执行权限</li></ol> <p><code>sudo chmod +x /usr/share/applications/application.desktop</code></p>`,6)])])}const b=a(l,[["render",i]]);export{_ as __pageData,b as default};
