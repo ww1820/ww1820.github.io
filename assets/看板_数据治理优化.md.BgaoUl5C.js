@@ -1,0 +1,3 @@
+import{_ as r,o as s,c as o,j as e,a as t}from"./chunks/framework.Crpw6aS5.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{"status":"open","priority":"high","dateCreated":"2026-08-14T01:53:48.200Z","dateModified":"2026-08-14T06:20:59.671Z","tags":["task"]},"headers":[],"relativePath":"看板/数据治理优化.md","filePath":"看板/数据治理优化.md","lastUpdated":1786696479000}'),n={name:"看板/数据治理优化.md"};function d(i,a,p,_,c,l){return s(),o("div",null,[...a[0]||(a[0]=[e("p",null,[t("1. 从易用性角度考虑整个数据治理工具，整个数据链路而不是某个工具"),e("br"),t(`
+2. 找李炳志和虞俊明了解为什么从数据录制到回放绘图要费很大精力`),e("br"),t(`
+3. topic 通信类型自发现，用户一般情况下是不知道通道中消息类型的`)],-1)])])}const u=r(n,[["render",d]]);export{m as __pageData,u as default};
